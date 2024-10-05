@@ -32,7 +32,7 @@ func (service *UserService) Login(username, password string) (dataLogin users.Us
 	if err != nil {
 		return users.UserCore{}, "", err
 	}
-	token, err = middlewares.CreateToken(dataLogin.ID)
+	token, err = middlewares.CreateToken(dataLogin.ID, dataLogin.Username)
 	if err != nil {
 		return users.UserCore{}, "", err
 	}

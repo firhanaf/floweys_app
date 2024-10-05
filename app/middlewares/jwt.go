@@ -15,10 +15,11 @@ func JWTMiddleware() echo.MiddlewareFunc {
 	})
 }
 
-func CreateToken(ID uint) (string, error) {
+func CreateToken(ID uint, Username string) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["ID"] = ID
+	claims["id"] = ID
+	claims["username"] = Username
 	claims["exp"] = time.Now().Add(time.Hour * 12).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
