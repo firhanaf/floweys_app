@@ -15,6 +15,7 @@ type Order struct {
 
 func OrderModelToCOre(input Order) orders.OrderCore {
 	return orders.OrderCore{
+		ID:       input.ID,
 		Category: input.Category,
 		Item:     input.Item,
 		Qty:      input.Qty,

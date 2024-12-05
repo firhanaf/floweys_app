@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"errors"
 	"floweys_app/app/config"
 	"github.com/golang-jwt/jwt"
 	echojwt "github.com/labstack/echo-jwt/v4"
@@ -24,4 +25,15 @@ func CreateToken(ID uint, Username string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte(config.JWT_SECRET))
+}
+
+func ExtractTokenUser(e echo.Context) (uint, string, error) {
+	user := e.Get("user").(*jwt.Token)
+	if user.Valid {
+		claims := user.Claims.(jwt.MapClaims)
+		userId := claims["id"].(float64)
+		username := claims["username"].(string)
+		return uint(userId), username, nil
+	}
+	return 0, "not found", errors.New("token invalid")
 }

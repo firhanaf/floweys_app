@@ -2,6 +2,7 @@ package router
 
 import (
 	"floweys_app/app/config"
+	"floweys_app/app/middlewares"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 
@@ -25,6 +26,8 @@ func InitRouter(db *gorm.DB, c *echo.Echo, cfg *config.AppConfig) {
 
 	c.POST("/login", UserHandlerAPI.Login)
 	c.POST("/register", UserHandlerAPI.Register)
-	c.POST("/order", OrderHandlerAPI.Create)
+	c.POST("/order", OrderHandlerAPI.Create, middlewares.JWTMiddleware())
+	c.GET("/order/:order_id", OrderHandlerAPI.Get, middlewares.JWTMiddleware())
+	c.DELETE("/order/:order_id", OrderHandlerAPI.Delete, middlewares.JWTMiddleware())
 
 }

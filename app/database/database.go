@@ -2,6 +2,7 @@ package database
 
 import (
 	"floweys_app/app/config"
+	ordersData "floweys_app/features/orders/data"
 	usersData "floweys_app/features/users/data"
 	"fmt"
 	"gorm.io/driver/mysql"
@@ -21,4 +22,5 @@ func InitMySql(config *config.AppConfig) *gorm.DB {
 
 func InitialMigration(db *gorm.DB) {
 	db.AutoMigrate(&usersData.User{})
+	db.AutoMigrate(&ordersData.Order{})
 }

@@ -9,9 +9,17 @@ type OrderService struct {
 	orderData orders.OrderDataInterface
 }
 
-func (service *OrderService) Remove(id uint) error {
+func (service *OrderService) ReadAll() error {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (service *OrderService) Remove(id uint) error {
+	err := service.orderData.Delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (service *OrderService) Add(input orders.OrderCore) error {
@@ -29,8 +37,11 @@ func (service *OrderService) Add(input orders.OrderCore) error {
 }
 
 func (service *OrderService) Read(id uint) (orders.OrderCore, error) {
-	//TODO implement me
-	panic("implement me")
+	result, err := service.orderData.Get(id)
+	if err != nil {
+		return orders.OrderCore{}, err
+	}
+	return result, nil
 }
 
 func (service *OrderService) Edit(id uint, input orders.OrderCore) error {
