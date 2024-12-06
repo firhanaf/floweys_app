@@ -10,9 +10,23 @@ type OrderQuery struct {
 	db *gorm.DB
 }
 
-func (repo *OrderQuery) GetAll() error {
-	//TODO implement me
-	panic("implement me")
+func (repo *OrderQuery) GetAll() ([]orders.OrderCore, error) {
+	var data []Order
+	tx := repo.db.Find(&data)
+	if tx.Error != nil {
+		return []orders.OrderCore{}, tx.Error
+	}
+	var orderCore []orders.OrderCore
+	for _, value := range data {
+		orderCore = append(orderCore, orders.OrderCore{
+			ID:       value.ID,
+			Category: value.Category,
+			Item:     value.Item,
+			Qty:      value.Qty,
+			TaskID:   value.TaskID,
+		})
+	}
+	return orderCore, nil
 }
 
 func (repo *OrderQuery) Delete(id uint) error {
@@ -54,11 +68,20 @@ func (repo *OrderQuery) Get(id uint) (orders.OrderCore, error) {
 }
 
 func (repo *OrderQuery) Update(id uint, input orders.OrderCore) error {
-	//TODO implement me
-	panic("implement me")
+	var data Order
+	tx := repo.db.Where("id = ?", id).First(&data)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	updatedOrder := OrderCoreToModel(input)
+	tx = repo.db.Model(&data).Updates(updatedOrder)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
 }
 
-func New(db *gorm.DB) orders.OrderDataInterface {
+func New(db *gorm.DB) *OrderQuery {
 	return &OrderQuery{
 		db: db,
 	}

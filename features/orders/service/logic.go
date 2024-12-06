@@ -9,9 +9,12 @@ type OrderService struct {
 	orderData orders.OrderDataInterface
 }
 
-func (service *OrderService) ReadAll() error {
-	//TODO implement me
-	panic("implement me")
+func (service *OrderService) ReadAll() ([]orders.OrderCore, error) {
+	result, err := service.orderData.GetAll()
+	if err != nil {
+		return []orders.OrderCore{}, err
+	}
+	return result, nil
 }
 
 func (service *OrderService) Remove(id uint) error {
@@ -45,8 +48,17 @@ func (service *OrderService) Read(id uint) (orders.OrderCore, error) {
 }
 
 func (service *OrderService) Edit(id uint, input orders.OrderCore) error {
-	//TODO implement me
-	panic("implement me")
+	if len(input.Category) < 3 {
+		return errors.New("category is too short, min 3 characters")
+	}
+	if len(input.Item) < 3 {
+		return errors.New("item is too short, min 3 characters")
+	}
+	err := service.orderData.Update(id, input)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func New(repo orders.OrderDataInterface) orders.OrderServiceInterface {

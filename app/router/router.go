@@ -24,10 +24,15 @@ func InitRouter(db *gorm.DB, c *echo.Echo, cfg *config.AppConfig) {
 	OrderService := _orderService.New(OrderData)
 	OrderHandlerAPI := _orderHandler.New(OrderService)
 
+	//user
 	c.POST("/login", UserHandlerAPI.Login)
 	c.POST("/register", UserHandlerAPI.Register)
+
+	//order
 	c.POST("/order", OrderHandlerAPI.Create, middlewares.JWTMiddleware())
+	c.GET("/order", OrderHandlerAPI.GetAll, middlewares.JWTMiddleware())
 	c.GET("/order/:order_id", OrderHandlerAPI.Get, middlewares.JWTMiddleware())
+	c.PUT("/order/:order_id", OrderHandlerAPI.Update, middlewares.JWTMiddleware())
 	c.DELETE("/order/:order_id", OrderHandlerAPI.Delete, middlewares.JWTMiddleware())
 
 }

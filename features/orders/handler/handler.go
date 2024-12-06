@@ -57,6 +57,24 @@ func (handler *OrderHandler) Get(c echo.Context) error {
 	return c.JSON(http.StatusOK, helpers.WebResponse(http.StatusOK, "success get data", resultResponse))
 }
 
+func (handler *OrderHandler) GetAll(c echo.Context) error {
+	result, err := handler.orderService.ReadAll()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.WebResponse(http.StatusInternalServerError, helpers.ErrDataNotFound.Error(), nil))
+	}
+	var resultResponse []OrderResponse
+	for _, value := range result {
+		resultResponse = append(resultResponse, OrderResponse{
+			ID:       value.ID,
+			Category: value.Category,
+			Item:     value.Item,
+			Qty:      value.Qty,
+			TaskID:   value.TaskID,
+		})
+	}
+	return c.JSON(http.StatusOK, helpers.WebResponse(http.StatusOK, "success get data", resultResponse))
+}
+
 func (handler *OrderHandler) Update(c echo.Context) error {
 	id := c.Param("order_id")
 	idConv, errConv := strconv.Atoi(id)

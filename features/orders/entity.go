@@ -10,7 +10,7 @@ type OrderCore struct {
 
 type OrderDataInterface interface {
 	Create(input OrderCore) error
-	GetAll() error
+	GetAll() ([]OrderCore, error)
 	Get(id uint) (OrderCore, error)
 	Update(id uint, input OrderCore) error
 	Delete(id uint) error
@@ -18,7 +18,7 @@ type OrderDataInterface interface {
 
 type OrderServiceInterface interface {
 	Add(input OrderCore) error
-	ReadAll() error
+	ReadAll() ([]OrderCore, error)
 	Read(id uint) (OrderCore, error)
 	Edit(id uint, input OrderCore) error
 	Remove(id uint) error
