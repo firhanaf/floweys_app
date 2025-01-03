@@ -24,13 +24,13 @@ type TaskCore struct {
 type TaskDataInterface interface {
 	Create(input TaskCore) error
 	Update(input TaskCore) error
-	Delete(input TaskCore) error
+	Delete(id uint) error
 	GetAll() ([]TaskCore, error)
 }
 
 type TaskServiceInterface interface {
 	Add(input TaskCore) error
-	Edit(input TaskCore) error
-	Remove(input TaskCore) error
+	Edit(id uint, input TaskCore) error
+	Remove(id uint) error
 	ReadAll() ([]TaskCore, error)
 }
